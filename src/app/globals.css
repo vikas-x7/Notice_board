@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-primary: #343332;
+  --color-primary-dark: #232222;
+  --color-primary-light: #d6d5d4;
+  --color-secondary: #1d1c1b;
+  --color-accent: #f59e0b;
+  --color-surface: #171615;
+  --color-card: #1d1c1b;
+  --color-card-hover: #232222;
+  --color-sidebar: #1d1c1b;
+  --color-muted: #6b6b6a;
+  --color-subtle: #a8a7a6;
+  --color-line: #343332;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: #fffffe;
+    font-family: var(--font-sans);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-sidebar);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
+  }
+}
+
+.sidebar-scrollbar {
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.sidebar-scrollbar:hover {
+  scrollbar-color: #343332 transparent;
+}
+
+.sidebar-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #343332;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.4s ease;
+}
+
+@utility animate-slide-up {
+  animation: slideUp 0.4s ease;
+}
+
+@utility animate-spin-slow {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

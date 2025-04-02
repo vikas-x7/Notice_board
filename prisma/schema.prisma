@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  STUDENT
+}
+
+enum Category {
+  ACADEMIC
+  PLACEMENT
+  EVENTS
+  SCHOLARSHIPS
+  SPORTS
+  HOSTEL
+  GENERAL
+}
+
+enum Urgency {
+  URGENT
+  IMPORTANT
+  NORMAL
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  role         Role     @default(STUDENT)
+  department   String?
+  rollNo       String?
+  branch       String?
+  year         String?
+  isVerified   Boolean  @default(false)
+  tempPassword Boolean  @default(false)
+  fcmToken     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  notices       Notice[]
+  bookmarks     Bookmark[]
+  subscriptions Subscription[]
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  link      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Notice {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  category    Category
+  urgency     Urgency   @default(NORMAL)
+  expiryDate  DateTime?
+  isPinned    Boolean   @default(false)
+  isArchived  Boolean   @default(false)
+  fileUrl     String?
+  fileName    String?
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  bookmarks Bookmark[]
+
+  @@index([category])
+  @@index([urgency])
+  @@index([isArchived])
+  @@index([isPinned])
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  noticeId  Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notice    Notice   @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, noticeId])
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  category  Category
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, category])
+}
